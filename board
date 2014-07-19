@@ -3,11 +3,14 @@ import java.util.ArrayList;
 
 public class Board {
 	
-	private int xLength;
-	private int yLength;
-	private int player1 = 1;
-	private int player2 = 2;
+	private final int xLength;
+	private final int yLength;
+	private final int player1 = 1;
+	private final int player2 = 2;
+	private int myTurn;
 	private ArrayList<ArrayList<Integer>> myBoard;
+	
+	
 	
 	/**
 	 * @param args
@@ -16,15 +19,38 @@ public class Board {
 		xLength = xLen;
 		yLength = yLen;
 		myBoard = new ArrayList<ArrayList<Integer>>();
+		myTurn = player1;
 		
 		
 		
 		
 	}
 	
-	public void drop(int player, int x, int y){
+	public void drop(int x, int y){
+		if (isLegal)
+	}
+	
+	public void checkWin(){
 		
 	}
+	
+	public void gameOver(){
+		
+	}
+	
+	public void switchTurns(){
+		
+	}
+	
+	public void isLegal(){
+		
+	}
+	
+	public void printBoard(){
+		
+	}
+	
+	
 	
 	
 	
