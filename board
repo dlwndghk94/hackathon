@@ -1,0 +1,270 @@
+import java.awt.Point;
+import java.util.ArrayList;
+
+
+public class Board {
+	
+	private final int xLength;
+	private final int yLength;
+	private final int player1 = 1;
+	private final int player2 = 2;
+	private int myTurn;
+	private int[][] myBoard;
+	private Point lastPos;
+	private ArrayList<Point> aroundLastPos = new ArrayList<Point>();
+	
+	
+	
+	
+	/**
+	 * @param args
+	 */
+	public Board(int xLen, int yLen){
+		xLength = xLen;
+		yLength = yLen;
+		myBoard = new int [xLen][yLen];
+		myTurn = player1;
+		lastPos = null;
+		
+	}
+	
+	public void drop(int x){
+		if (!gameOver()){
+			if(isFull()){
+				System.out.print("this line is full");
+				return;
+			}
+			for(int i = 0; i < yLength; i++){
+				if (myBoard[x][i]== 0){
+					myBoard[x][i] = myTurn;
+					lastPos = new Point (x,i);
+					addAround(lastPos);
+					break;
+				}
+			}
+		}
+	}
+	
+	public void takeBack(){
+		myBoard[lastPos.x][lastPos.y] = 0;
+		return;
+	}
+	
+	public void addAround(Point last){
+		int xPos = last.x;
+		int yPos = last.y;
+		aroundLastPos.add(new Point(xPos+1, yPos));
+		aroundLastPos.add(new Point(xPos-1, yPos));
+		aroundLastPos.add(new Point(xPos+1, yPos+1));
+		aroundLastPos.add(new Point(xPos-1, yPos+1));
+		aroundLastPos.add(new Point(xPos+1, yPos-1));
+		aroundLastPos.add(new Point(xPos-1, yPos-1));
+		aroundLastPos.add(new Point(xPos, yPos+1));
+		aroundLastPos.add(new Point(xPos, yPos-1));
+		for (int i = 0; i < aroundLastPos.size(); i++){
+			Point temp = aroundLastPos.get(i);
+			if (temp.x < 0 || temp.x >= xLength || temp.y < 0 || temp.y >= yLength){
+				aroundLastPos.remove(temp);
+				i--;
+			}
+		}
+		
+		
+	}
+	
+	public boolean checkWin(){
+		if (lastPos ==null){
+			return false;
+		}
+		else{
+			for (Point temp: aroundLastPos){
+				if (myBoard[temp.x][temp.y] == myBoard[lastPos.x][lastPos.y]){
+					int xChange = temp.x-lastPos.x;
+					int yChange = temp.y-lastPos.y;
+					try {
+						if(myBoard[temp.x+xChange][temp.y+ yChange] == myBoard[lastPos.x][lastPos.y]
+							&& myBoard[temp.x+xChange+ xChange][temp.y+ yChange + yChange] 
+							== myBoard[lastPos.x][lastPos.y]){
+							return true;
+						}
+						
+					}
+					catch (ArrayIndexOutOfBoundsException e){
+
+					}
+				}
+			}
+		}
+		aroundLastPos.clear();
+		return false;
+	}
+	
+	public boolean gameOver(){
+		
+		if(isFull())
+			return false;
+		return checkWin();
+	}
+	
+	
+	public void switchTurns(){
+		if(myTurn == player1){
+			myTurn = player2;
+		}
+		else{
+			myTurn = player1;
+		}
+	}
+	
+	public boolean isLegal (int xPos){
+		if (gameOver()){
+			return false;
+		}
+		if(myBoard[xPos][yLength-1] != 0)
+			return false;
+		return true;
+	}
+	
+	private boolean isFull(){
+		for(int i = 0; i < yLength; i++) 
+			for(int j = 0; j < xLength; j++)
+				if(myBoard[i][j] == 0)
+					return false;
+		return true;
+	}
+	
+	
+	public void printBoard(){
+		for (int j = yLength-1; j >= 0; j-- ){
+			for(int i = 0; i < xLength; i ++){
+				if(i == xLength-1){
+					System.out.println(myBoard[i][j]);
+				} else{
+				System.out.print(myBoard[i][j] + " ");
+			}
+		}
+		
+		}
+	}
+	
+	/*public Board cloneBoard(int[][] board){
+		Board clone = new Board(xLength, yLength);
+		for (int i = 0; i< board.length; i++){
+			for (int j =0; j<board[i].length; j++){
+				clone.myBoard[i][j] = board[i][j];
+			}
+		}
+		return clone;
+	}
+	
+	public int bestMove(){
+		Board myClone = cloneBoard(myBoard);
+		for (int i = 0; i < 7; i++){
+			myClone.drop(i);
+			if(myClone.checkWin()){
+				return i;
+			}
+			else{
+				myClone.takeBack();
+			}
+		}
+		myClone.switchTurns();
+		for(int i = 0; i < 7; i++){
+			myClone.drop(i);
+			if(myClone.checkWin()){
+				return i;
+		}
+		else{
+			myClone.takeBack();
+		}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+
+		
+	public int bestMove(){
+		
+		Point[] moves = new Point[7];
+		int goodMove = 0;
+		
+		for (int i = 0; i< moves.length; i++){
+			moves[i] = new Point(i, -9999999);
+			
+		}
+		
+		int[][] myClone = cloneBoard(myBoard);
+		if(depth == 0 || gameOver()){
+			return goodMove;
+		}
+	*/
+		
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Board board = new Board(7,6);
+		board.printBoard();
+		System.out.println(" ");
+		board.drop(0);
+		System.out.println(board.gameOver());
+		board.switchTurns();
+		board.drop(1);
+		System.out.println(board.gameOver());
+		board.switchTurns();
+		board.drop(2);
+		System.out.println(board.gameOver());
+		board.switchTurns();
+		board.drop(0);
+		System.out.println(board.gameOver());
+		board.switchTurns();
+		board.drop(0);
+		board.switchTurns();
+		board.drop(0);
+		board.switchTurns();
+		board.drop(1);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(3);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(2);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(3);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(2);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(3);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(6);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(6);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(3);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		
+		board.printBoard();
+
+	}
+	}
