@@ -24,9 +24,11 @@ public class Board {
 	}
 	
 	public void drop(int x, int y){
+	public void drop(int x){
 		if (!gameOver()){
 			for(int i = 0; i < yLength; i++){
 				if (myBoard[x][i]!= 0){
+				if (myBoard[x][i]== 0){
 					myBoard[x][i] = myTurn;
 				}
 			}
@@ -35,49 +37,33 @@ public class Board {
 	
 	public boolean checkWin(){
 		return false;
+	public void checkWin(){
+		
 	}
 	
 	public boolean gameOver(){
-<<<<<<< HEAD
-			if(ifFull)
-				return false;
-			return checkWin;
-	}
-	
-	private boolean isFull(){
-		for(int i = 0; i < yLength; i++)
-			for(int j = 0; j < xLength; j++)
-				if(myBoard[i][j] == 0)
-					return false;
-		return true;
-=======
 		
 		return false;
->>>>>>> origin/master
 	}
 	
 	public void switchTurns(){
 			return (myTurn == player1)? player2:player1;
 	}
 	
-<<<<<<< HEAD
-	public void isLegal(){
-	    if gameOver
-			return false;
-		if(myBoard[i][ylen-1] != 0)
-			return false;
-		return true;
-                			
-        	       	
-=======
 	public boolean isLegal(){
-		
->>>>>>> origin/master
+		return true;
 	}
 	
 	public void printBoard(){
 		for(int i = 0; i < xLength; i ++){
 			for (int j = 0; j <yLength; )
+		for (int j = yLength-1; j >= 0; j-- ){
+			for(int i = 0; i < xLength; i ++){
+				if(i == xLength-1){
+					System.out.println(myBoard[i][j]);
+				} else{
+				System.out.print(myBoard[i][j] + " ");
+			}
 		}
 		
 	}
