@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.ArrayList;
 
 
@@ -9,6 +10,9 @@ public class Board {
 	private final int player2 = 2;
 	private int myTurn;
 	private int[][] myBoard;
+	private Point lastPos;
+	private ArrayList<Point> aroundLastPos;
+	
 	
 	
 	
@@ -20,6 +24,7 @@ public class Board {
 		yLength = yLen;
 		myBoard = new int [xLen][yLen];
 		myTurn = player1;
+		lastPos = null;
 		
 	}
 	
@@ -28,22 +33,70 @@ public class Board {
 			for(int i = 0; i < yLength; i++){
 				if (myBoard[x][i]== 0){
 					myBoard[x][i] = myTurn;
+					lastPos = new Point (x,i);
+					addAround(lastPos);
 					break;
 				}
 			}
 		}
 	}
 	
-	public void checkWin(){
+	public void addAround(Point last){
+		int xPos = last.x;
+		int yPos = last.y;
+		aroundLastPos.add(new Point(xPos+1, yPos));
+		aroundLastPos.add(new Point(xPos-1, yPos));
+		aroundLastPos.add(new Point(xPos+1, yPos+1));
+		aroundLastPos.add(new Point(xPos-1, yPos+1));
+		aroundLastPos.add(new Point(xPos+1, yPos-1));
+		aroundLastPos.add(new Point(xPos-1, yPos-1));
+		aroundLastPos.add(new Point(xPos, yPos+1));
+		aroundLastPos.add(new Point(xPos, yPos-1));
+		for (Point temp: aroundLastPos){
+			if (temp.x < 0 || temp.x >= xLength || temp.y < 0 || temp.y >= yLength){
+				aroundLastPos.remove(temp);
+			}
+		}
+		
+		
+	}
+	
+	public boolean checkWin(){
+		if (lastPos ==null){
+			return true;
+		}
+		else{
+			for (Point temp: aroundLastPos){
+				if (myBoard[temp.x][temp.y] == myBoard[lastPos.x][lastPos.y]){
+					
+				}
+			}
+		}
 		
 	}
 	
 	public boolean gameOver(){
 
 
-			if(isFull)
-				return false;
-			return checkWin;
+		if(isFull)
+			return false;
+		return checkWin;
+	
+	public void switchTurns(){
+		if(myTurn == player1){
+			myTurn = player2;
+		}
+		else{
+			myTurn = player1;
+		}
+	}
+	
+	public boolean isLegal(){
+		if gameOver
+		return false;
+	if(myBoard[i][ylen-1] != 0)
+		return false;
+
 	}
 	
 	private boolean isFull(){
@@ -52,26 +105,6 @@ public class Board {
 				if(myBoard[i][j] == 0)
 					return false;
 		return true;
-
-
-		
-		return false;
-	}
-	
-	public void switchTurns(){
-		return (myTurn === player1)? player2: player1; 
-	}
-	
-	public boolean isLegal(){
-		
-	    if gameOver
-			return false;
-		if(myBoard[i][ylen-1] != 0)
-			return false;
-		return true;
-                			
-        	       	
-	}
 	
 	public void printBoard(){
 		for (int j = yLength-1; j >= 0; j-- ){
