@@ -11,7 +11,7 @@ public class Board {
 	private int myTurn;
 	private int[][] myBoard;
 	private Point lastPos;
-	private ArrayList<Point> aroundLastPos;
+	private ArrayList<Point> aroundLastPos = new ArrayList<Point>();
 	
 	
 	
@@ -30,6 +30,10 @@ public class Board {
 	
 	public void drop(int x){
 		if (!gameOver()){
+			if(isFull()){
+				System.out.print("this line is full");
+				return;
+			}
 			for(int i = 0; i < yLength; i++){
 				if (myBoard[x][i]== 0){
 					myBoard[x][i] = myTurn;
@@ -52,9 +56,11 @@ public class Board {
 		aroundLastPos.add(new Point(xPos-1, yPos-1));
 		aroundLastPos.add(new Point(xPos, yPos+1));
 		aroundLastPos.add(new Point(xPos, yPos-1));
-		for (Point temp: aroundLastPos){
+		for (int i = 0; i < aroundLastPos.size(); i++){
+			Point temp = aroundLastPos.get(i);
 			if (temp.x < 0 || temp.x >= xLength || temp.y < 0 || temp.y >= yLength){
 				aroundLastPos.remove(temp);
+				i--;
 			}
 		}
 		
@@ -63,24 +69,39 @@ public class Board {
 	
 	public boolean checkWin(){
 		if (lastPos ==null){
-			return true;
+			return false;
 		}
 		else{
 			for (Point temp: aroundLastPos){
 				if (myBoard[temp.x][temp.y] == myBoard[lastPos.x][lastPos.y]){
-					
+					int xChange = temp.x-lastPos.x;
+					int yChange = temp.y-lastPos.y;
+					try {
+						if(myBoard[temp.x+xChange][temp.y+ yChange] == myBoard[lastPos.x][lastPos.y]
+							&& myBoard[temp.x+xChange+ xChange][temp.y+ yChange + yChange] 
+							== myBoard[lastPos.x][lastPos.y]){
+							return true;
+						}
+						
+					}
+					catch (ArrayIndexOutOfBoundsException e){
+
+					}
 				}
 			}
 		}
+		aroundLastPos.clear();
+		return false;
 		
 	}
 	
 	public boolean gameOver(){
-
-
-		if(isFull)
+		
+		if(isFull())
 			return false;
-		return checkWin;
+		return checkWin();
+	}
+	
 	
 	public void switchTurns(){
 		if(myTurn == player1){
@@ -91,11 +112,13 @@ public class Board {
 		}
 	}
 	
-	public boolean isLegal(){
-		if gameOver
-		return false;
-	if(myBoard[i][ylen-1] != 0)
-		return false;
+	public boolean isLegal (int xPos){
+		if (gameOver()){
+			return false;
+		}
+		if(myBoard[xPos][yLength-1] != 0)
+			return false;
+		return true;
 
 	}
 	
@@ -105,6 +128,8 @@ public class Board {
 				if(myBoard[i][j] == 0)
 					return false;
 		return true;
+	}
+	
 	
 	public void printBoard(){
 		for (int j = yLength-1; j >= 0; j-- ){
@@ -131,13 +156,30 @@ public class Board {
 		board.printBoard();
 		System.out.println(" ");
 		board.drop(0);
+		System.out.println(board.gameOver());
 		board.switchTurns();
 		board.drop(1);
+		System.out.println(board.gameOver());
 		board.switchTurns();
 		board.drop(2);
+		System.out.println(board.gameOver());
+		board.switchTurns();
+		board.drop(0);
+		System.out.println(board.gameOver());
+		board.switchTurns();
+		board.drop(3);
 		board.switchTurns();
 		board.drop(0);
 		board.switchTurns();
+		board.drop(4);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(0);
+		board.switchTurns();
+		System.out.println(board.gameOver());
+		board.drop(5);
+		board.switchTurns();
+		System.out.println(board.gameOver());
 		
 		board.printBoard();
 
