@@ -102,7 +102,7 @@ public class CFGame extends Application {
         
         root.getChildren().add(info);
         info.relocate(grid_width * xLength, 120);
-        
+        ballContainer.setPrefSize(700, 600);
         ballContainer.getStylesheets().add(this.getClass().getResource("/ballcontainer.css").toExternalForm());
         
         ballContainer.getStyleClass().add("ballcontainer");
@@ -284,7 +284,7 @@ public class CFGame extends Application {
             for(int j = 0; j < myBoard[0].length; j++)
             {
                 if(myBoard[i][j] != 0)
-                    this.addOneBall(i, yLength - j, true, myBoard[i][j]);
+                    this.addOneBall(i, yLength - j - 1, true, myBoard[i][j]);
             }
         }
     }
