@@ -1,12 +1,17 @@
 package hackathon;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -22,7 +27,9 @@ public class CFGame extends Application {
     final int grid_width = 100;
 
     private final int xLength = 7;
-    private final int yLength = 7;
+    private final int yLength = 6;
+    
+    private boolean diskDropped = true;
 
     private final int player1 = 1;
     private final int player2 = 2;
@@ -31,6 +38,8 @@ public class CFGame extends Application {
     private Point lastPos;
     private ArrayList<Point> aroundLastPos = new ArrayList<Point>();
 
+    Label lbl_player_status = new Label();
+    
     public void addOneBall(int col, int row, boolean needShowAnimation, int type) {
         Ball ball = new Ball(col, row, type);
         ballContainer.getChildren().add(ball);
@@ -57,10 +66,47 @@ public class CFGame extends Application {
         myTurn = player1;
         lastPos = null;
 
-        Scene scene = new Scene(root, 800, 800);
+        Scene scene = new Scene(root, 950, 800);
         //add background
         this.root.getChildren().add(this.ballContainer);
 
+        //add restart button
+        Button btn_restart = new Button();
+        btn_restart.setText("New Game");
+        btn_restart.setFont(new Font(20));
+        btn_restart.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                startANewTurn();
+            }
+        });
+        
+        Label info = new Label();
+        info.setWrapText(true);
+        info.setPrefWidth(200);
+        info.setText("Author: \nGunjan Baid,\n Aaron Fung,\n Joong Hwa(J) Lee,\n Yunfan Yang\n\n"
+                + "Instruction: Take turns dropping disks into the slots until a player gets four of his disks in a row horizontally, vertically, or diagonally."
+                + "");
+        info.setFont(new Font(20));
+        
+        //add player status label
+        lbl_player_status.setText("Current: Player 1");
+        lbl_player_status.setFont(new Font(25));
+        
+        root.getChildren().add(btn_restart);
+        btn_restart.relocate(grid_width * xLength, 600);
+        
+        root.getChildren().add(lbl_player_status);
+        lbl_player_status.relocate(grid_width * xLength, 50);
+        
+        root.getChildren().add(info);
+        info.relocate(grid_width * xLength, 120);
+        
+        ballContainer.getStylesheets().add(this.getClass().getResource("/ballcontainer.css").toExternalForm());
+        
+        ballContainer.getStyleClass().add("ballcontainer");
+        
         scene.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
             @Override
@@ -71,10 +117,24 @@ public class CFGame extends Application {
                 //System.out.println("Drop at column:" + );
                 int columnToDrop = ((int)event.getX() / grid_width);
                 ballContainer.getChildren().clear();
-                drop(columnToDrop);
-                switchTurns();
-                printBoard();
+                //if (isFull()){
+                //    lbl_player_status.setText("Tie game.");
+                //}
+                //else 
+                if(isLegal(columnToDrop)){
+                    drop(columnToDrop);
+                    if(checkWin())
+                    {
+                        lbl_player_status.setText("Player " + myBoard[lastPos.x][lastPos.y] + " wins!");
+                        AlertDlg.showDlg(scene.getWindow(), "Congrats!" ,"Player " + myBoard[lastPos.x][lastPos.y] + " wins!" );
+                    }else if (isFull()){
+                    lbl_player_status.setText("Tie game.");
+                    AlertDlg.showDlg(scene.getWindow(), "The board is full" ,"Tie game.");
+                    } else
+                        switchTurns();
+                }
                 
+                printBoard();
             }
 
         });
@@ -83,17 +143,6 @@ public class CFGame extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-//        for(int i = 0; i < 7; i++)
-//           for(int j = 0; j < 7; j++)
-//                addOneBall(i, j, false, 2);
-
-//        addOneBall(1, 0, false,2);
-//        addOneBall(2, 0, false,2);
-//        addOneBall(3, 0, false,2);
-//        addOneBall(4, 0, false,2);
-//        addOneBall(5, 0, false,2);
-//        addOneBall(6, 0, false,2);
-        //addOneBall(0, 1, false);
     }
 
     /**
@@ -105,8 +154,8 @@ public class CFGame extends Application {
 
     public void drop(int x) {
         if (!gameOver()) {
-            if (isFull()) {
-                System.out.print("this line is full");
+            if (!isLegal(x) ) {
+                System.out.print("this line is full ");
                 return;
             }
             for (int i = 0; i < yLength; i++) {
@@ -153,6 +202,8 @@ public class CFGame extends Application {
                         if (myBoard[temp.x + xChange][temp.y + yChange] == myBoard[lastPos.x][lastPos.y]
                                 && myBoard[temp.x + xChange + xChange][temp.y + yChange + yChange]
                                 == myBoard[lastPos.x][lastPos.y]) {
+                            
+                                //this.lbl_player_status.setText("Player " + myBoard[lastPos.x][lastPos.y] + " wins!");
                             return true;
                         }
 
@@ -168,18 +219,21 @@ public class CFGame extends Application {
     }
 
     public boolean gameOver() {
-
         if (isFull()) {
-            return false;
+            return true;
         }
-        return checkWin();
+        Boolean hasSomeoneWon = checkWin();
+        
+        return hasSomeoneWon;
     }
 
     public void switchTurns() {
         if (myTurn == player1) {
             myTurn = player2;
+            lbl_player_status.setText("Current: Player 2");
         } else {
             myTurn = player1;
+            lbl_player_status.setText("Current: Player 1");
         }
     }
 
@@ -187,7 +241,7 @@ public class CFGame extends Application {
         if (gameOver()) {
             return false;
         }
-        if (myBoard[xPos][yLength - 1] != 0) {
+        else if (myBoard[xPos][yLength - 1] != 0) {
             return false;
         }
         return true;
@@ -205,6 +259,15 @@ public class CFGame extends Application {
         return true;
     }
 
+    private void startANewTurn(){
+        myBoard = new int[xLength][xLength];
+        myTurn = player1;
+        lastPos = null;
+        this.ballContainer.getChildren().clear();
+        printBoard();
+        this.lbl_player_status.setText("");
+    }
+    
     public void printBoard() {
         for (int j = yLength - 1; j >= 0; j--) {
             for (int i = 0; i < xLength; i++) {
