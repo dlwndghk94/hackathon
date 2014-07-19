@@ -8,7 +8,7 @@ public class Board {
 	private final int player1 = 1;
 	private final int player2 = 2;
 	private int myTurn;
-	private ArrayList<ArrayList<Integer>> myBoard;
+	private int[][] myBoard;
 	
 	
 	
@@ -18,35 +18,42 @@ public class Board {
 	public Board(int xLen, int yLen){
 		xLength = xLen;
 		yLength = yLen;
-		myBoard = new ArrayList<ArrayList<Integer>>();
+		myBoard = new int [xLen][yLen];
 		myTurn = player1;
-		
-		
-		
 		
 	}
 	
 	public void drop(int x, int y){
-		if (isLegal)
+		if (!gameOver()){
+			for(int i = 0; i < yLength; i++){
+				if (myBoard[x][i]!= 0){
+					myBoard[x][i] = myTurn;
+				}
+			}
+		}
 	}
 	
 	public void checkWin(){
 		
 	}
 	
-	public void gameOver(){
+	public boolean gameOver(){
 		
+		return false;
 	}
 	
 	public void switchTurns(){
 		
 	}
 	
-	public void isLegal(){
+	public boolean isLegal(){
 		
 	}
 	
 	public void printBoard(){
+		for(int i = 0; i < xLength; i ++){
+			for (int j = 0; j <yLength; )
+		}
 		
 	}
 	
