@@ -23,21 +23,23 @@ public class Board {
 		
 	}
 	
-	public void drop(int x, int y){
+	public void drop(int x){
 		if (!gameOver()){
 			for(int i = 0; i < yLength; i++){
-				if (myBoard[x][i]!= 0){
+				if (myBoard[x][i]== 0){
 					myBoard[x][i] = myTurn;
+					break;
 				}
 			}
 		}
 	}
 	
-	public boolean checkWin(){
-		return false;
+	public void checkWin(){
+		
 	}
 	
 	public boolean gameOver(){
+<<<<<<< HEAD
 <<<<<<< HEAD
 			if(ifFull)
 				return false;
@@ -51,37 +53,37 @@ public class Board {
 					return false;
 		return true;
 =======
+=======
+>>>>>>> origin/master
 		
 		return false;
->>>>>>> origin/master
 	}
 	
 	public void switchTurns(){
-			return (myTurn == player1)? player2:player1;
+		if(myTurn == player1){
+			myTurn = player2;
+		}
+		else{
+			myTurn = player1;
+		}
 	}
 	
-<<<<<<< HEAD
-	public void isLegal(){
-	    if gameOver
-			return false;
-		if(myBoard[i][ylen-1] != 0)
-			return false;
-		return true;
-                			
-        	       	
-=======
 	public boolean isLegal(){
-		
->>>>>>> origin/master
+		return true;
 	}
 	
 	public void printBoard(){
-		for(int i = 0; i < xLength; i ++){
-			for (int j = 0; j <yLength; )
+		for (int j = yLength-1; j >= 0; j-- ){
+			for(int i = 0; i < xLength; i ++){
+				if(i == xLength-1){
+					System.out.println(myBoard[i][j]);
+				} else{
+				System.out.print(myBoard[i][j] + " ");
+			}
 		}
 		
 	}
-	
+	}
 	
 	
 	
@@ -91,6 +93,19 @@ public class Board {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		Board board = new Board(7,6);
+		board.printBoard();
+		System.out.println(" ");
+		board.drop(0);
+		board.switchTurns();
+		board.drop(1);
+		board.switchTurns();
+		board.drop(2);
+		board.switchTurns();
+		board.drop(0);
+		board.switchTurns();
+		
+		board.printBoard();
 
 	}
 
