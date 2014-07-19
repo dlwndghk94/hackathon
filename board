@@ -39,9 +39,9 @@ public class Board {
 	}
 	
 	public boolean gameOver(){
-<<<<<<< HEAD
-<<<<<<< HEAD
-			if(ifFull)
+
+
+			if(isFull)
 				return false;
 			return checkWin;
 	}
@@ -52,24 +52,25 @@ public class Board {
 				if(myBoard[i][j] == 0)
 					return false;
 		return true;
-=======
-=======
->>>>>>> origin/master
+
+
 		
 		return false;
 	}
 	
 	public void switchTurns(){
-		if(myTurn == player1){
-			myTurn = player2;
-		}
-		else{
-			myTurn = player1;
-		}
+		return (myTurn === player1)? player2: player1; 
 	}
 	
 	public boolean isLegal(){
+		
+	    if gameOver
+			return false;
+		if(myBoard[i][ylen-1] != 0)
+			return false;
 		return true;
+                			
+        	       	
 	}
 	
 	public void printBoard(){
