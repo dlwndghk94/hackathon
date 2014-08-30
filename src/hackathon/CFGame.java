@@ -66,7 +66,7 @@ public class CFGame extends Application {
         myTurn = player1;
         lastPos = null;
 
-        Scene scene = new Scene(root, 950, 800);
+        Scene scene = new Scene(root, 950, 600);
         //add background
         this.root.getChildren().add(this.ballContainer);
 
@@ -95,7 +95,7 @@ public class CFGame extends Application {
         lbl_player_status.setFont(new Font(25));
         
         root.getChildren().add(btn_restart);
-        btn_restart.relocate(grid_width * xLength, 600);
+        btn_restart.relocate(grid_width * xLength, 500);
         
         root.getChildren().add(lbl_player_status);
         lbl_player_status.relocate(grid_width * xLength, 50);
@@ -249,8 +249,8 @@ public class CFGame extends Application {
     }
 
     private boolean isFull() {
-        for (int i = 0; i < yLength; i++) {
-            for (int j = 0; j < xLength; j++) {
+        for (int i = 0; i < xLength; i++) {
+            for (int j = 0; j < yLength; j++) {
                 if (myBoard[i][j] == 0) {
                     return false;
                 }
@@ -284,7 +284,7 @@ public class CFGame extends Application {
             for(int j = 0; j < myBoard[0].length; j++)
             {
                 if(myBoard[i][j] != 0)
-                    this.addOneBall(i, yLength - j - 1, true, myBoard[i][j]);
+                    this.addOneBall(i, yLength - j -1, true, myBoard[i][j]);
             }
         }
     }
